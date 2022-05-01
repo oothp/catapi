@@ -21,19 +21,22 @@ const routesReview = require("./routes/review")
 const routesUser = require("./routes/user")
 const routesAuth = require('./routes/auth')
 
+const apiPrefix = '/api/' + process.env.VERSION
+
 // middleware for authenticating token submitted with requests
 jwtauth.authenticateToken.unless = unless
 app.use(jwtauth.authenticateToken.unless({
     path: [
-        { url: '/api/auth/login', methods: ['POST']},
-        { url: '/api/auth/register', methods: ['POST']}
+        { url: apiPrefix + '/auth/login', methods: ['POST']},
+        { url: apiPrefix + '/auth/register', methods: ['POST']},
+        { url: apiPrefix + '/', methods: ['GET']}
     ]
 }))
 
-app.use("/api", routesCat)
-app.use("/api", routesReview)
-app.use("/api", routesUser)
-app.use('/api', routesAuth)
+app.use(apiPrefix, routesCat)
+app.use(apiPrefix, routesReview)
+app.use(apiPrefix, routesUser)
+app.use(apiPrefix, routesAuth)
 
 const listener = app.listen(process.env.PORT || 8000, () => {
     console.log("App is listening on port " + listener.address().port)

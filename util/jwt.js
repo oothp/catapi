@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken')
 
 dotenv.config()
 
+const tokenLifetime = 7200 // '2h'
+const rTokenLifetime = 604800 // '7d'
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -17,12 +20,26 @@ function authenticateToken(req, res, next) {
     })
 }
 
-function generateAccessToken(userId) {
-    return jwt.sign({ data: userId }, process.env.TOKEN_SECRET, { expiresIn: '2h' });
+function generateAccessToken(payload) {
+    return jwt.sign(
+        { data: payload }, 
+        process.env.TOKEN_SECRET, 
+        { expiresIn: tokenLifetime }
+    );
+}
+
+function generateRefreshToken(payload) {
+    return jwt.sign(
+        { data: payload }, 
+        process.env.REFRESH_TOKEN_SECRET, 
+        { expiresIn: rTokenLifetime }
+    );
 }
 
 module.exports = {
     authenticateToken,
-    generateAccessToken
-    // verifyJwt
+    generateAccessToken,
+    generateRefreshToken,
+    tokenLifetime,
+    rTokenLifetime
 }
