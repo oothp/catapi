@@ -3,11 +3,9 @@ const router  = express.Router();
 const reviewController = require('../controllers/review');
 
 router.get('/reviews', reviewController.getAllReviews);
-router.post('/review', reviewController.newReview);
-// router.delete('/reviews', reviewController.deleteAllReviews);
+router.post('/reviews', reviewController.newReview);
 
-router.get('/review/:id', reviewController.getReview); // maybe id?
-router.delete('/review/:id', reviewController.deleteReview);
-// router.post('/review/:name', reviewController.newCatPhoto); // pic for cat
+router.get('/reviews/:id', reviewController.getReview); // maybe id? | getById
+router.delete('/reviews/:id', reviewController.deleteReview);
 
 module.exports = router;
