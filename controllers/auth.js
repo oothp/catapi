@@ -34,21 +34,26 @@ const register = async (req, res) => {
         passwd: hashedPassword,
         avatar: avatar ?? ""
     })
+
     newUser.save((err, user) => {
         if (err) return res.json({ Error: 'Could not create user' })
 
-        res.status(201).send(authenticate(newUser))
+        let resJson = newTokensForUser(newUser)
+        saveRefreshToken(user._id, resJson.refresh_token)
+        res.status(201).send(resJson)
     })
 }
 
 const login = async (req, res) => {
     const { email, password } = req.body
 
-    let user = await User.findOne({ email: email }).select('+passwd')
+    let user = await User.findOne({ email: email })
     if (user) {
         let verified = await bcrypt.compare(password, user.passwd)
         if (verified) {
-            res.status(200).send(authenticate(user))
+            let resJson = await newTokensForUser(user)
+            saveRefreshToken(user._id, resJson.refresh_token)
+            res.status(200).send(resJson)
 
         } else {
             return res.status(403).send({ Error: 'Wrong password' })
@@ -58,72 +63,66 @@ const login = async (req, res) => {
     }
 }
 
-function authenticate(user) {
+function newTokensForUser(user) {
     const token = JWT.generateAccessToken(user._id)
     const rtoken = JWT.generateRefreshToken(user._id)
 
     let tokenExp = new Date().getTime() + JWT.tokenLifetime * 1000
     let rTokenExp = new Date().getTime() + JWT.rTokenLifetime * 1000
 
-    let res = {
+    let access_token = {
+        token: token,
+        expires: tokenExp
+    }
+
+    let refresh_token = {
+        token: rtoken,
+        expires: rTokenExp
+    }
+
+    return {
         user: {
             name: user.name,
             email: user.email,
             avatar: user.avatar
         },
-        access_token: {
-            token: token,
-            expires: tokenExp
-        },
-        refresh_token: {
-            token: rtoken,
-            expires: rTokenExp
-        }
+        access_token,
+        refresh_token
     }
-    return res
+}
+
+function saveRefreshToken(user_id, t) {
+    User.findOne({ _id: user_id }, (err, doc) => {
+        doc.rToken = t
+        doc.save()
+    })
 }
 
 const refreshToken = async (req, res) => {
-    const refreshToken = req.header("x-auth-token")
 
-    // If token is not provided, send error message
-    if (!refreshToken) {
-        res.status(401).send({
-            Error: "Token not found",
-        })
-    }
+    const refreshToken = req.header('x-refresh-token')
+    if (!refreshToken) res.status(401).send({ Error: 'Refresh token not found' })
 
-    if (!refreshToken.includes(refreshToken)) {
-        res.status(403).json({
-            msg: "Invalid refresh token",
-        })
-    }
-
-    // ???? save refresh token somwehere for later verificaiton?
     try {
-        const user = await JWT.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET
-        );
-        // user = { email: 'jame@gmail.com', iat: 1633586290, exp: 1633586350 }
-        const { email } = user;
-        const accessToken = await JWT.sign(
-            { email },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "10s" }
-        );
-        res.json({ accessToken });
-    } catch (error) {
-        res.status(403).json({
-            errors: [
-                {
-                    msg: "Invalid token",
-                },
-            ],
-        });
-    }
+        let verified = await JWT.verify(refreshToken)
+        // console.log('verified: ', verified)
 
-    // res.json({ 'refresh_token': 'ok' })
+        const user = await User.findOne({ 'rToken.token': refreshToken })
+        if (!user) {
+            return res.status(401).send({ Error: 'Refresh token ERROR. Login again' })
+        }
+
+        let tokens = await newTokensForUser(user)
+        saveRefreshToken(user._id, tokens.refresh_token)
+        res.status(200).send({
+            access_token: tokens.access_token, 
+            refresh_token: tokens.refresh_token
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error })
+    }
 }
 
 function generateRandomNickname() {

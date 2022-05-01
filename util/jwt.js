@@ -36,10 +36,15 @@ function generateRefreshToken(payload) {
     );
 }
 
+function verify(token) {
+    return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET)
+}
+
 module.exports = {
     authenticateToken,
     generateAccessToken,
     generateRefreshToken,
+    verify,
     tokenLifetime,
     rTokenLifetime
 }
