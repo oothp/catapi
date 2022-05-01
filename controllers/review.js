@@ -23,6 +23,7 @@ const newReview = (req, res) => {
   User.findOne({ _id: req.body.user_id }, (err, user) => {
     if (err || !user) {
       console.error("User not found.");
+
     } else {
       console.log("User found, moving forward.");
 
@@ -31,15 +32,15 @@ const newReview = (req, res) => {
         description: req.body.cat.description,
         will_scratch: req.body.cat.will_scratch,
         created_at: req.body.cat.created_at,
-      });
+      })
 
       cat.save((err, data) => {
         if (err) {
-          return res.json({ Error: data });
+          return res.json({ Error: data })
         } else {
-          console.log("=>> Cat saved! cat id: ", cat._id);
+          console.log("=>> Cat saved! cat id: ", cat._id)
         }
-      });
+      })
 
       const newReview = new Review({
         rating: req.body.rating,
@@ -47,7 +48,7 @@ const newReview = (req, res) => {
         cat,
         user,
         created_at: req.body.created_at,
-      });
+      })
 
       newReview.save((err, data) => {
         if (err) {
@@ -63,13 +64,13 @@ const newReview = (req, res) => {
                 console.log(success);
               }
             }
-          );
-          return res.json({ Review: 'ok' });
+          )
+          return res.json({ Review: 'ok' })
         }
-      });
+      })
     }
-  });
-};
+  })
+}
 
 //GET '/review/:id'
 const getReview = (req, res) => {
@@ -79,14 +80,13 @@ const getReview = (req, res) => {
       if (err) {
         console.log("Error: ===>>", err.message);
       }
-      return res.json({ message: "Review not found." });
+      return res.send({ message: "Review not found." });
     } else {
-      return res.json(data);
+      return res.send(data);
     }
-  })
-    .populate("cat")
-    .populate("user");
-};
+  }).populate("cat")
+    .populate("user")
+}
 
 //DELETE '/review/:name'
 const deleteReview = (req, res) => {
@@ -103,11 +103,11 @@ const deleteReview = (req, res) => {
     else return res.json({ message: "Review deleted." });
   });
   // res.json({ message: "DELETE 1 review" });
-};
+}
 
 module.exports = {
   getAllReviews,
   newReview,
   getReview,
   deleteReview,
-};
+}
