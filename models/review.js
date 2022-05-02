@@ -24,7 +24,13 @@ const ReviewSchema = new mongoose.Schema({
     comments: [ Comment ],
     photos: [ PictureInfo ],
     created_at: { type:String, default: Date.now }
-});
+})
+
+ReviewSchema.methods.toJSON = function() {
+    var obj = this.toObject()
+    delete obj.__v
+    return obj
+}
 
 const Review = mongoose.model('Review', ReviewSchema); //convert to model named Review
 module.exports = Review; //export for controller use
