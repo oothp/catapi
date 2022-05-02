@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");//, Schema = mongoose.Schema; //import mongoose
+const mongoose = require('mongoose')
 
-const User = require("./user");
-const Cat = require("./cat");
-const Location = require("./location");
-const PictureInfo = require("./picture_info").schema;
-const Comment = require('./comment').schema;
+const User = require('./user')
+const Cat = require('./cat')
+const Location = require('./location')
+const PictureInfo = require('./picture_info').schema
+const Comment = require('./comment').schema
 
 const ReviewSchema = new mongoose.Schema({
     rating: Number,
@@ -19,7 +19,7 @@ const ReviewSchema = new mongoose.Schema({
     },
     location: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "Location" 
+        ref: 'Location'
     },
     comments: [ Comment ],
     photos: [ PictureInfo ],
@@ -32,5 +32,5 @@ ReviewSchema.methods.toJSON = function() {
     return obj
 }
 
-const Review = mongoose.model('Review', ReviewSchema); //convert to model named Review
-module.exports = Review; //export for controller use
+const Review = mongoose.model('Review', ReviewSchema) //convert to model named Review
+module.exports = Review //export for controller use

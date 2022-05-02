@@ -1,20 +1,16 @@
-const mongoose = require("mongoose"),
-  Schema = mongoose.Schema;
-
-const Review = require("../models/review");
-const Cat = require("../models/cat");
-const Location = require("../models/location");
-const User = require("../models/user");
-const PictureInfo = require("../models/picture_info");
-const Logger = require("nodemon/lib/utils/log");
+const Review = require('../models/review')
+const Cat = require('../models/cat')
+const Location = require('../models/location')
+const User = require('../models/user')
+const PictureInfo = require('../models/picture_info')
 
 //GET '/reviews'
 const getAllReviews = (req, res) => {
   Review.find({}, (err, data) => {
     if (err) {
-      return res.json({ Error: err });
+      return res.json({ Error: err })
     }
-    return res.json(data);
+    return res.json(data)
   });
 };
 
