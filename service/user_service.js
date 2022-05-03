@@ -1,22 +1,26 @@
 const User = require('../models/user')
 
-function getAll() {
-    let users = User.find({})
+async function getAll() {
+    let users = await User.find({})
     if (!users) throw (err)
 
     return users
 }
 
-function getById(params) {
+async function getById(params) {
     const user_id = params.id
-    let user = User.findOne({ _id: user_id }).populate('reviews')
-    if (!user) throw (err)
+    try {
+        let user = await User.findOne({ _id: user_id }).populate('reviews')
+        if (!user) throw ({ message: 'User not found' })
+        
+        return user
 
-    return user
+    } catch (err) {
+        throw ({ message: 'User not found' })
+    }
 }
 
 module.exports = {
     getAll,
     getById,
-
 }

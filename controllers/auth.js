@@ -1,6 +1,6 @@
 const service = require('../service/auth_service')
 
-const register = async (req, res) => {
+const register = (req, res) => {
     service.register(req.body)
     .then(data => { res.status(201).send(data) })
     .catch(err => { 
@@ -12,7 +12,7 @@ const register = async (req, res) => {
     })
 }
 
-const login = async (req, res) => {
+const login = (req, res) => {
     service.login(req.body)
     .then(data => { res.status(200).send(data) })
     .catch(err => { 
@@ -21,7 +21,7 @@ const login = async (req, res) => {
     })
 }
 
-const refreshToken = async (req, res) => {
+const refreshToken = (req, res) => {
     service.refresh(req)
     .then(data => { res.status(200).send(data) })
     .catch(err => {

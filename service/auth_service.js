@@ -32,7 +32,7 @@ async function register({ email, password, name, avatar }) {
     let tokens = await JWT.getNewTokens(newUser._id)
     newUser.rToken = tokens.refresh_token
     await newUser.save()
-    return { newUser, 
+    return { user: newUser, 
         access_token: tokens.access_token, 
         refresh_token: tokens.refresh_token 
     }
@@ -60,7 +60,7 @@ async function login({ email, password }) {
 
 async function refresh(req) {
     const refreshToken = req.header('x-refresh-token')
-    if (!refreshToken) throw ({ status: 401, message: 'Refresh token not found' })
+    if (!refreshToken) throw ({ message: 'Refresh token not found' })
 
     try {
         let verified = await JWT.verify(refreshToken)

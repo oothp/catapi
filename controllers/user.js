@@ -1,6 +1,6 @@
 const service = require('../service/user_service')
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = (req, res) => {
     service.getAll()
     .then(users => {
         res.status(200).send(users)
@@ -11,17 +11,10 @@ const getAllUsers = async (req, res) => {
     })
 }
 
-const getUserById = async (req, res) => {
+const getUserById = (req, res) => {
     service.getById(req.params)
-    .then(data => { 
-        if (data === null) res.status(400).send({ Error: "User not found" })
-        
-        res.status(200).send(data) })
-
-    .catch(err => { 
-        console.error('error', err)
-        res.status(400).send({ Error: err.message })
-    })
+    .then(data => { res.status(200).send(data) })
+    .catch(err => { res.status(400).send({ Error: err.message }) })
 }
 
 const updateUser = (req, res) => {
