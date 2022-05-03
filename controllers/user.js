@@ -1,27 +1,28 @@
-const User = require('../models/user')
+const service = require('../service/user_service')
 
-//GET '/users'
-const getAllUsers = (req, res) => {
-    User.find({}, (err, users) => {
-        if (err) {
-            return res.send({ Error: err })
-        }
-        return res.send(users);
-        })
+const getAllUsers = async (req, res) => {
+    service.getAll()
+    .then(users => {
+        res.status(200).send(users)
+    })
+    .catch(err => {
+        console.log('err >', err)
+        res.status(400).send({ Error: err.message })
+    })
 }
 
-//GET '/review/:id'
-const getUserById = (req, res) => {
-    let user_id = req.params.id //get the user name
+const getUserById = async (req, res) => {
+    service.getById(req.params)
+    .then(data => { 
+        if (data === null) res.status(400).send({ Error: "User not found" })
+        
+        res.status(200).send(data) })
 
-    //find the specific tea with that name
-    User.findOne({ id:user_id }, (err, data) => {
-    if(err || !data) {
-        return res.json({message: 'User not found' })
-    }
-    else return res.json(data); //return the review object if found
-    }).populate('reviews')
-};
+    .catch(err => { 
+        console.error('error', err)
+        res.status(400).send({ Error: err.message })
+    })
+}
 
 const updateUser = (req, res) => {
     res.json({"udpate": "ok"})
