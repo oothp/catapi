@@ -5,7 +5,10 @@ const register = async (req, res) => {
     .then(data => { res.status(201).send(data) })
     .catch(err => { 
         console.error('error', err)
-        res.status(err.status).send({ Error: err.message })
+        if (err.reason) {
+            res.status(200).send({ Error: 'Email already exists' })
+        }
+        res.status(401).send({ Error: err.message })
     })
 }
 
@@ -14,7 +17,7 @@ const login = async (req, res) => {
     .then(data => { res.status(200).send(data) })
     .catch(err => { 
         console.error('error', err)
-        res.status(err.status).send({ Error: err.message })
+        res.status(401).send({ Error: err.message })
     })
 }
 
@@ -23,7 +26,7 @@ const refreshToken = async (req, res) => {
     .then(data => { res.status(200).send(data) })
     .catch(err => {
         console.error('error', err)
-        res.status(err.status).send({ Error: err.message })
+        res.status(401).send({ Error: err.message })
     })
 }
 

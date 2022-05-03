@@ -7,14 +7,15 @@ const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-na
 
 async function register({ email, password, name, avatar }) {
     if (!validator.emailValid(email))
-        throw ({ status: 403, message: 'Invalid email' })
+        throw ({ message: 'Invalid email' })
 
     if (!validator.passwordValid(password))
-        throw ({ status: 403, message: 'Password needs to be at least 6 characters' })
+        throw ({ message: 'Password needs to be at least 6 characters' })
 
     let user = await User.findOne({ email: email }, {})
     if (user) {
-        throw ({ status: 200, message: 'Email already exists' })
+        throw ({ reason: 200 })
+        // throw ({ status: 200, message: 'Email already exists' })
         // 422 Unprocessable Entity: server understands the content type of the request entity
         // 200 Ok: Gmail, Facebook, Amazon, Twitter return 200 for user already exists
     }
@@ -50,10 +51,10 @@ async function login({ email, password }) {
                 refresh_token: tokens.refresh_token 
             }
         } else {
-            throw ({ status: 403, message: 'Wrong password' })
+            throw ({ message: 'Wrong password' })
         }
     } else {
-        throw ({ status: 403, message: 'Email not found' })
+        throw ({ message: 'Email not found' })
     }
 }
 
@@ -73,10 +74,10 @@ async function refresh(req) {
             return { access_token: tokens.access_token, refresh_token: tokens.refresh_token }
 
         } else {
-            throw ({ status: 401, message: 'Refresh token ERROR !' })
+            throw ({ message: 'Refresh token ERROR !' })
         }
     } catch (err) {
-        throw ({ status: 401, message: err.message})
+        throw ({ message: err.message })
     }
 }
 
