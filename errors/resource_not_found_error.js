@@ -7,10 +7,6 @@ class ResourceNotFoundError extends Error {
     
     this.status = 404 // not found
     }
-
-    statusCode() {
-        return this.status
-    }
 }
 
 module.exports = ResourceNotFoundError

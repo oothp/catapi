@@ -1,23 +1,21 @@
 const User = require('../models/user')
 const validator = require('../util/validator')
 const JWT = require('../util/jwt.js')
-const res = require('express/lib/response')
 const bcrypt = require('bcryptjs')
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator')
+const AuthError = require('../errors/auth_error')
+const ResourceConflictError = require('../errors/resource_conflict_error')
 
 async function register({ email, password, name, avatar }) {
     if (!validator.emailValid(email))
-        throw ({ message: 'Invalid email' })
+        throw AuthError('Invalid email' )
 
     if (!validator.passwordValid(password))
-        throw ({ message: 'Password needs to be at least 6 characters' })
+        throw AuthError('Password needs to be at least 6 characters')
 
     let user = await User.findOne({ email: email }, {})
     if (user) {
-        throw ({ reason: 200 })
-        // throw ({ status: 200, message: 'Email already exists' })
-        // 422 Unprocessable Entity: server understands the content type of the request entity
-        // 200 Ok: Gmail, Facebook, Amazon, Twitter return 200 for user already exists
+        throw new ResourceConflictError('Email already exists')
     }
 
     const salt = await bcrypt.genSalt(12)
@@ -51,16 +49,16 @@ async function login({ email, password }) {
                 refresh_token: tokens.refresh_token 
             }
         } else {
-            throw ({ message: 'Wrong password' })
+            throw AuthError('Wrong password')
         }
     } else {
-        throw ({ message: 'Email not found' })
+        throw AuthError('Email not found')
     }
 }
 
 async function refresh(req) {
     const refreshToken = req.header('x-refresh-token')
-    if (!refreshToken) throw ({ message: 'Refresh token not found' })
+    if (!refreshToken) throw AuthError('Refresh token not found')
 
     try {
         let verified = await JWT.verify(refreshToken)
@@ -74,10 +72,10 @@ async function refresh(req) {
             return { access_token: tokens.access_token, refresh_token: tokens.refresh_token }
 
         } else {
-            throw ({ message: 'Refresh token ERROR !' })
+            throw AuthError('Refresh token ERROR !')
         }
     } catch (err) {
-        throw ({ message: err.message })
+        throw AuthError(err.message) // refresh token invalid? ye
     }
 }
 

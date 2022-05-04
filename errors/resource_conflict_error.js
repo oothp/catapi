@@ -7,10 +7,6 @@ class ResourceConflictError extends Error {
     
     this.status = 409 // conflict
     }
-
-    statusCode() {
-        return this.status
-    }
 }
 
 module.exports = ResourceConflictError

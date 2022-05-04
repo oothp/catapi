@@ -7,10 +7,6 @@ class AuthError extends Error {
     
     this.status = 401 // unauthorized.
     }
-
-    statusCode() {
-        return this.status
-    }
 }
 
 module.exports = AuthError

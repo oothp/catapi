@@ -7,10 +7,6 @@ class BadRequestError extends Error {
     
     this.status = 400 // not found
     }
-
-    statusCode() {
-        return this.status
-    }
 }
 
 module.exports = BadRequestError
