@@ -22,8 +22,7 @@ const ReviewSchema = new mongoose.Schema({
     },
     comments: [Comment],
     photos: [String],
-    created_at: { type: String, default: Date.now },
-    is_author: { type: Boolean, default: false } // for deleting/editing reviews?
+    created_at: { type: String, default: Date.now }
 })
 
 ReviewSchema.methods.toJSON = function () {
