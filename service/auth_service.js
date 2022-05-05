@@ -8,7 +8,7 @@ const ResourceConflictError = require('../errors/resource_conflict_error')
 
 async function register({ email, password, name, avatar }) {
     if (!validator.emailValid(email))
-        throw AuthError('Invalid email' )
+        throw AuthError('Invalid email')
 
     if (!validator.passwordValid(password))
         throw AuthError('Password needs to be at least 6 characters')
@@ -28,9 +28,10 @@ async function register({ email, password, name, avatar }) {
     let tokens = await JWT.getNewTokens(newUser._id)
     newUser.rToken = tokens.refresh_token
     await newUser.save()
-    return { user: newUser, 
-        access_token: tokens.access_token, 
-        refresh_token: tokens.refresh_token 
+    return {
+        user: newUser,
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token
     }
 }
 
@@ -42,9 +43,10 @@ async function login({ email, password }) {
             let tokens = await JWT.getNewTokens(user._id)
             user.rToken = tokens.refresh_token
             await user.save()
-            return { user, 
-                access_token: tokens.access_token, 
-                refresh_token: tokens.refresh_token 
+            return {
+                user,
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token
             }
         } else {
             throw AuthError('Wrong password')

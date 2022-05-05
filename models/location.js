@@ -1,12 +1,9 @@
-const mongoose = require("mongoose"); //import mongoose
-const Review = require("./review");
+const mongoose = require('mongoose')
 
-// Location schema
 const LocationSchema = new mongoose.Schema({
-    created_at: { type:String, default: new Date() },
-    review: { type: mongoose.Schema.Types.ObjectId, ref: "Review" },
+    created_at: { type: String, default: Date.now },
     coordinates: [{ type: String }]
-});
+})
 
-const Location = mongoose.model('Location', LocationSchema); //convert to model named Location
-module.exports = Location; //export for controller use
+const Location = mongoose.model('Location', LocationSchema)
+module.exports = Location
