@@ -30,7 +30,7 @@ async function createReview({ data, iat, exp }, body) {
         const options = { new: true }
         let updatedU = await User.findOneAndUpdate({ _id: user._id }, { $push: { reviews: review } }, options)
         if (!updatedU) throw new BadRequestError('Error saving to database')
-        
+
         return await review.save()
 
     } catch (err) {
@@ -53,13 +53,13 @@ async function deleteReview({ id }) {
 }
 
 async function updateReview({ id }, { rating, would_pet, cat, photos }) {
-    
+
     // find cat id
     let r = await Review.findById(id)
     const cat_id = r.cat._id
 
     const options = { new: true }
-    
+
     // updat the cat first
     const updateCatArgs = { name: cat.name, description: cat.description, will_scratch: cat.will_scratch }
     let ucat = await Cat.findByIdAndUpdate(cat_id, updateCatArgs, options)
@@ -69,7 +69,7 @@ async function updateReview({ id }, { rating, would_pet, cat, photos }) {
     const updateReviewArgs = { rating: rating, would_pet: would_pet, photos: photos, cat: ucat }
     let review = await Review.findOneAndUpdate({ _id: id }, updateReviewArgs, options).populate('cat').populate('user')
     if (!review) throw new ResourceNotFoundError('Review not found, nothing to update')
-    
+
     return review
 }
 

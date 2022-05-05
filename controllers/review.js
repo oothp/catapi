@@ -44,11 +44,11 @@ const deleteReview = (req, res) => {
 //PUT '/reviews/:id'
 const updateReview = (req, res) => {
   service.updateReview(req.params, req.body)
-  .then(review => { res.status(200).send(review) })
-  .catch(err => {
-    console.error(err)
-    sendError(res, err)
-  })
+    .then(review => { res.status(200).send(review) })
+    .catch(err => {
+      console.error(err)
+      sendError(res, err)
+    })
 }
 
 function sendError(res, err) {

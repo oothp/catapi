@@ -1,4 +1,3 @@
-const BadRequestError = require('../errors/bad_request_error')
 const service = require('../service/user_service')
 
 const getAllUsers = (req, res) => {
