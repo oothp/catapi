@@ -34,5 +34,3 @@ module.exports = {
     getCatById,
     newCatPhoto
 }
-
-const Cat = require("../models/cat");
