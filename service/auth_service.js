@@ -8,10 +8,10 @@ const ResourceConflictError = require('../errors/resource_conflict_error')
 
 async function register({ email, password, name, avatar }) {
     if (!validator.emailValid(email))
-        throw AuthError('Invalid email')
+        throw new AuthError('Invalid email')
 
     if (!validator.passwordValid(password))
-        throw AuthError('Password needs to be at least 6 characters')
+        throw new AuthError('Password needs to be at least 6 characters')
 
     let user = await User.findOne({ email: email }, {})
     if (user) { throw new ResourceConflictError('Email already exists') }
@@ -49,16 +49,16 @@ async function login({ email, password }) {
                 refresh_token: tokens.refresh_token
             }
         } else {
-            throw AuthError('Wrong password')
+            throw new AuthError('Wrong password')
         }
     } else {
-        throw AuthError('Email not found')
+        throw new AuthError('Email not found')
     }
 }
 
 async function refresh(req) {
     const refreshToken = req.header('x-refresh-token')
-    if (!refreshToken) throw AuthError('Refresh token not found')
+    if (!refreshToken) new AuthError('Refresh token not found')
 
     try {
         let verified = await JWT.verify(refreshToken)
@@ -71,10 +71,10 @@ async function refresh(req) {
             return { access_token: tokens.access_token, refresh_token: tokens.refresh_token }
 
         } else {
-            throw AuthError('Refresh token ERROR !')
+            throw new AuthError('Refresh token ERROR !')
         }
     } catch (err) {
-        throw AuthError(err.message) // refresh token invalid? ye
+        throw new AuthError(err.message) // refresh token invalid? ye
     }
 }
 

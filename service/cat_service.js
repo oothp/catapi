@@ -12,7 +12,7 @@ async function getCatById({ id }) {
     let cat = await Cat.findOne({ _id: id }).populate('users').populate('locations')
     if (!cat) throw new ResourceNotFoundError('Cat not found')
 
-    return user
+    return cat
 }
 
 module.exports = {

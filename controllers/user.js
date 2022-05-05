@@ -1,11 +1,12 @@
 const service = require('../service/user_service')
+const errorHandler = require('../util/error_handler')
 
 const getAllUsers = (req, res) => {
     service.getAll()
         .then(users => { res.status(200).send(users) })
         .catch(err => {
             console.log(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 
@@ -14,7 +15,7 @@ const getUserById = (req, res) => {
         .then(user => { res.status(200).send(user) })
         .catch(err => {
             console.error(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 
@@ -23,7 +24,7 @@ const updateUser = (req, res) => {
         .then(user => { res.status(200).send(user) })
         .catch(err => {
             console.error(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 
@@ -32,7 +33,7 @@ const deleteUser = (req, res) => {
         .then(u => { res.status(200).send({ 'Deleted': u }) })
         .catch(err => {
             console.error(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 
@@ -41,13 +42,5 @@ module.exports = {
     getUserById,
     updateUser,
     deleteUser,
-}
-
-
-function sendError(res, err) {
-    res.status(err.status)
-        .send({
-            Error: err.message
-        })
 }
 

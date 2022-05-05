@@ -1,4 +1,5 @@
 const service = require('../service/review_service')
+const errorHandler = require('../util/error_handler')
 
 //GET '/reviews'
 const getAllReviews = (req, res) => {
@@ -6,7 +7,7 @@ const getAllReviews = (req, res) => {
     .then(reviews => { res.status(200).send(reviews) })
     .catch(err => {
       console.log(err)
-      sendError(res, err)
+      errorHandler.processError(res, err)
     })
 }
 
@@ -16,7 +17,7 @@ const newReview = async (req, res) => {
     .then(review => { res.status(201).send(review) })
     .catch(err => {
       console.error(err)
-      sendError(res, err)
+      errorHandler.processError(res, err)
     })
 }
 
@@ -26,7 +27,7 @@ const getReview = (req, res) => {
     .then(review => { res.status(200).send(review) })
     .catch(err => {
       console.error(err)
-      sendError(res, err)
+      errorHandler.processError(res, err)
     })
 }
 
@@ -37,7 +38,7 @@ const deleteReview = (req, res) => {
     .then(cat => { res.status(204).send('ok') })
     .catch(err => {
       console.error(err)
-      sendError(res, err)
+      errorHandler.processError(res, err)
     })
 }
 
@@ -47,14 +48,7 @@ const updateReview = (req, res) => {
     .then(review => { res.status(200).send(review) })
     .catch(err => {
       console.error(err)
-      sendError(res, err)
-    })
-}
-
-function sendError(res, err) {
-  res.status(err.status)
-    .send({
-      Error: err.message
+      errorHandler.processError(res, err)
     })
 }
 

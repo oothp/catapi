@@ -1,4 +1,5 @@
 const service = require('../service/cat_service')
+const errorHandler = require('../util/error_handler')
 
 //GET '/cats'
 const getAllCats = (req, res) => {
@@ -6,7 +7,7 @@ const getAllCats = (req, res) => {
         .then(cats => { res.status(200).send(cats) })
         .catch(err => {
             console.error(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 
@@ -16,7 +17,7 @@ const getCatById = (req, res) => {
         .then(cat => { res.status(200).send(cat) })
         .catch(err => {
             console.error(err)
-            sendError(res, err)
+            errorHandler.processError(res, err)
         })
 }
 

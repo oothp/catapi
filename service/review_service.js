@@ -33,14 +33,19 @@ async function createReview({ data, iat, exp }, body) {
 
         return await review.save()
 
-    } catch (err) {
-        throw new BadRequestError(err)
-    }
+    } catch (err) { throw new BadRequestError(err) }
 }
 
 async function getReviewById({ id }) {
     let review = await Review.findOne({ _id: id }).populate('cat').populate('user').populate('location')
     if (!review) throw new ResourceNotFoundError('Review not found')
+
+    if (!review.user || !review.cat) {
+        let errorMessage = 'Review malformed - missing elements ['
+        if (!review.user) errorMessage += 'user'
+        if (!review.cat) errorMessage += 'cat'
+        throw new ResourceNotFoundError(errorMessage + ']')
+    }
 
     return review
 }
