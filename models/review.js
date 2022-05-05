@@ -22,15 +22,22 @@ const ReviewSchema = new mongoose.Schema({
         ref: 'Location'
     },
     comments: [ Comment ],
-    photos: [ PictureInfo ],
-    created_at: { type:String, default: Date.now }
+    photos: [ String ],
+    created_at: { type: String, default: Date.now },
+    is_author: { type: Boolean, default: false } // for deleting/editing reviews?
 })
 
 ReviewSchema.methods.toJSON = function() {
     var obj = this.toObject()
+    delete obj.user._id
+    delete obj.user.reviews
+    delete obj.user.comments
+    delete obj.user.__v
+    delete obj.cat._id
+    delete obj.cat.__v
     delete obj.__v
     return obj
 }
 
-const Review = mongoose.model('Review', ReviewSchema) //convert to model named Review
-module.exports = Review //export for controller use
+const Review = mongoose.model('Review', ReviewSchema)
+module.exports = Review

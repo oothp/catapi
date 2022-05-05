@@ -29,6 +29,7 @@ app.use(jwtauth.authenticateToken.unless({
     path: [
         { url: apiPrefix + '/auth/login', methods: ['POST']},
         { url: apiPrefix + '/auth/register', methods: ['POST']},
+        { url: apiPrefix + '/auth/refresh-token', methods: ['POST']},
         { url: apiPrefix + '/', methods: ['GET']}
     ]
 }))
@@ -37,6 +38,10 @@ app.use(apiPrefix, routesCat)
 app.use(apiPrefix, routesReview)
 app.use(apiPrefix, routesUser)
 app.use(apiPrefix, routesAuth)
+
+app.use(apiPrefix + '/', (req, res) => {
+    res.send({ api: process.env.VERSION })
+})
 
 const listener = app.listen(process.env.PORT || 8000, () => {
     console.log("App is listening on port " + listener.address().port)
