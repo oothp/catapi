@@ -4,7 +4,7 @@ const catController = require('../controllers/cat')
 
 router.get('/cats', catController.getAllCats)
 
-router.get('/cat/:_id', catController.getCatById)
-router.post('/cat/:id', catController.newCatPhoto) // pic for cat
+router.get('/cats/:_id', catController.getCatById)
+router.post('/cats/:id', catController.newCatPhoto) // pic for cat
 
 module.exports = router
