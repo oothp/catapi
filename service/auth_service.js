@@ -14,9 +14,7 @@ async function register({ email, password, name, avatar }) {
         throw AuthError('Password needs to be at least 6 characters')
 
     let user = await User.findOne({ email: email }, {})
-    if (user) {
-        throw new ResourceConflictError('Email already exists')
-    }
+    if (user) { throw new ResourceConflictError('Email already exists') }
 
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(password, salt)
@@ -37,7 +35,7 @@ async function register({ email, password, name, avatar }) {
 }
 
 async function login({ email, password }) {
-    let user = await User.findOne({ email: email })
+    let user = await User.findOne({ email: email }).select('+passwd')//.populate('reviews').populate('comments')
     if (user) {
         let verified = await bcrypt.compare(password, user.passwd)
         if (verified) {
@@ -62,7 +60,6 @@ async function refresh(req) {
 
     try {
         let verified = await JWT.verify(refreshToken)
-        // console.log('verified: ', verified)
         let user = await User.findOne({ 'rToken.token': refreshToken })
 
         if (user) {
@@ -85,7 +82,8 @@ function generateRandomNickname() {
         length: 2
     })
     shortName = shortName.replaceAll('_', ' ')
-    return shortName.charAt(0).toUpperCase() + shortName.slice(1)
+    // return shortName.charAt(0).toUpperCase() + shortName.slice(1)
+    return shortName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
 }
 
 module.exports = {

@@ -9,7 +9,7 @@ async function getAll() {
     return users
 }
 
-async function getById({ id }) {
+async function getUserById({ id }) {
     let user = await User.findOne({ _id: id }).populate('reviews')
     if (!user) throw new ResourceNotFoundError('User not found')
 
@@ -36,7 +36,7 @@ async function deleteUser({ id }) {
 
 module.exports = {
     getAll,
-    getById,
+    getUserById,
     updateUser,
     deleteUser
 }

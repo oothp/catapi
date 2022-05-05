@@ -11,7 +11,7 @@ const getAllUsers = (req, res) => {
 }
 
 const getUserById = (req, res) => {
-    service.getById(req.params, req.body)
+    service.getUserById(req.params, req.body)
         .then(user => { res.status(200).send(user) })
         .catch(err => {
             console.error(err)
