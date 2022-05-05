@@ -82,7 +82,6 @@ function generateRandomNickname() {
         length: 2
     })
     shortName = shortName.replaceAll('_', ' ')
-    // return shortName.charAt(0).toUpperCase() + shortName.slice(1)
     return shortName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
 }
 
