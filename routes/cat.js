@@ -1,14 +1,10 @@
-const express = require('express');
-const router  = express.Router();
-const catController = require('../controllers/cat');
+const express = require('express')
+const router = express.Router()
+const catController = require('../controllers/cat')
 
-router.get('/cats', catController.getAllCats);
-router.post('/cat', catController.newCat);
-// router.delete('/cats', catController.deleteAllCats);
+router.get('/cats', catController.getAllCats)
 
-// router.get('/cat/:name', catController.getCatByName);
-router.get('/cat/:_id', catController.getCatById);
-router.delete('/cat/:id', catController.deleteCat);
-router.post('/cat/:id', catController.newCatPhoto); // pic for cat
+router.get('/cats/:id', catController.getCatById)
+router.post('/cats/:id', catController.newCatPhoto) // pic for cat
 
-module.exports = router;
+module.exports = router

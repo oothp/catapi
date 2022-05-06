@@ -1,46 +1,40 @@
-const User = require("../models/user");
+const service = require('../service/user_service')
+const errorHandler = require('../util/error_handler')
 
-//GET '/users'
 const getAllUsers = (req, res) => {
-    User.find({}, (err, data) => {
-        if (err) {
-            return res.json({ Error: err });
-        }
-        return res.json(data);
-        });
-};
-
-
-//GET '/review/:id'
-const getUserById = (req, res) => {
-    let user_id = req.params.id; //get the user name
-
-    //find the specific tea with that name
-    User.findOne({ id:user_id }, (err, data) => {
-    if(err || !data) {
-        return res.json({message: "User not found."});
-    }
-    else return res.json(data); //return the review object if found
-    }).populate('reviews')
-};
-
-const updateUser = (req, res) => {
-    res.json({"udpate": "ok"})
+    service.getAll()
+        .then(users => { res.status(200).send(users) })
+        .catch(err => {
+            console.log(err)
+            errorHandler.processError(res, err)
+        })
 }
 
-//DELETE '/cat/:name'
-const deleteUser = (req, res) => {
-    res.json({"delete": "ok"})
-//     let userId = req.params.id; // get the id of review to delete
+const getUserById = (req, res) => {
+    service.getUserById(req.params, req.body)
+        .then(user => { res.status(200).send(user) })
+        .catch(err => {
+            console.error(err)
+            errorHandler.processError(res, err)
+        })
+}
 
-//     Tea.deleteOne({id:userId}, (err, data) => {
-//     //if there's nothing to delete return a message
-//     if( data.deletedCount == 0) return res.json({message: "User doesn't exist."});
-//     //else if there's an error, return the err message
-//     else if (err) return res.json(`Something went wrong, please try again. ${err}`);
-//     //else, return the success message
-//     else return res.json({message: "User deleted."});
-//     });
+const updateUser = (req, res) => {
+    service.updateUser(req.params, req.body)
+        .then(user => { res.status(200).send(user) })
+        .catch(err => {
+            console.error(err)
+            errorHandler.processError(res, err)
+        })
+}
+
+const deleteUser = (req, res) => {
+    service.deleteUser(req.params)
+        .then(u => { res.status(200).send({ 'Deleted': u }) })
+        .catch(err => {
+            console.error(err)
+            errorHandler.processError(res, err)
+        })
 }
 
 module.exports = {
@@ -49,5 +43,4 @@ module.exports = {
     updateUser,
     deleteUser,
 }
-
 

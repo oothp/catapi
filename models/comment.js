@@ -1,13 +1,12 @@
-// const mongoose = require("mongoose"), Schema = mongoose.Schema; 
-const mongoose = require("mongoose"); //import mongoose
+const mongoose = require('mongoose')
 
-const User = require("./user");
-const Review = require("./review");
+const User = require('./user')
+const Review = require('./review')
 
-// Comment schema
 const CommentSchema = new mongoose.Schema({
-    created_at: { type:String, default: Date.now },
+    created_at: { type: String, default: Date.now },
     body: String,
+    photo: String,
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "User" 
@@ -16,7 +15,7 @@ const CommentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Review" 
     },
-});
+})
 
-const Comment = mongoose.model('Comment', CommentSchema); //convert to model named Comment
-module.exports = Comment; //export for controller use
+const Comment = mongoose.model('Comment', CommentSchema)
+module.exports = Comment
