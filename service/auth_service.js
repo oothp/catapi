@@ -58,7 +58,7 @@ async function login({ email, password }) {
 
 async function refresh(req) {
     const refreshToken = req.header('x-refresh-token')
-    if (!refreshToken) new AuthError('Refresh token not found')
+    if (!refreshToken) throw new AuthError('Refresh token not found')
 
     try {
         let verified = await JWT.verify(refreshToken)
